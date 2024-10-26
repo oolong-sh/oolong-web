@@ -1,0 +1,29 @@
+.tab-handle {
+  padding: 0.5em;
+  margin-bottom: -1px;
+  background-color: gainsboro;
+  border: 1px solid gainsboro;
+}
+
+.tab-handle.active {
+  background-color: white;
+  border-bottom: 1px solid white;
+}
+
+.tab-title {
+  margin: 0 0.5em;
+}
+
+.tab-close {
+  border: none;
+  background-color: unset;
+  font-size: 1em;
+  border-radius: 0.5em;
+}
+
+.tab-close:hover {
+  background-color: gray;
+}
+
+.tab-new {
+}

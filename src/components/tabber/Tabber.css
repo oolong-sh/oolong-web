@@ -1,0 +1,16 @@
+.tab-bar {
+  display: flex;
+  border-bottom: 1px solid gainsboro;
+}
+
+.tab-contents {
+  padding: 0.5em;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
