@@ -1,32 +1,45 @@
-import Editor from '../editor/ForwardRefEditor';
+function closeTabId(tabs, id) {
+  return tabs.filter(tab => tab.id !== id);
+}
+
+function closeTabIndex(tabs, index) {
+  const newTabs = [...tabs];
+  newTabs.splice(index, 1);
+  return newTabs;
+}
 
 export default function tabsReducer(state, action) {
   switch (action.type) {
-    case 'select': {  // Parameters: index
+    case 'select': {  // Parameters: id
+      const newActiveIndex = state.tabs.findIndex(tab => tab.id === action.id);
+      if (newActiveIndex < 0)
+        return state;
+      return {...state, activeIndex: newActiveIndex};
+    }
+    case 'select_index': {  // Parameters: index
       return {...state, activeIndex: action.index};
     }
     case 'open': {
-      const newTab = {
-        title: `Tab ${state.tabs.length + 1}`,
-        content: <Editor markdown={`# Tab ${state.tabs.length + 1}`} />,
-      }
-      const newTabs = [...state.tabs, newTab];
-
+      const newTabs = [...state.tabs, action.tab];
       return {...state, tabs: newTabs};
     }
-    case 'close': {  // Parameters: index
-      const toDelete = state.tabs[action.index];
-      const newTabs = state.tabs.filter((tab) => (toDelete != tab));
+    case 'close': {
+      const newTabs = closeTabId(state.tabs, action.id);
       // Clamp active index
-      const newActiveIndex = Math.max(0, Math.min(state.activeIndex, newTabs.length - 1));
-
       // TODO keep same tab selected when closing to left of active
-
+      const newActiveIndex = Math.max(0, Math.min(state.activeIndex, newTabs.length - 1));
+      return {...state, tabs: newTabs, activeIndex: newActiveIndex};
+    }
+    case 'close_index': {  // Parameters: index
+      const newTabs = closeTabIndex(state.tabs, action.index);
+      // Clamp active index
+      // TODO keep same tab selected when closing to left of active
+      const newActiveIndex = Math.max(0, Math.min(state.activeIndex, newTabs.length - 1));
       return {...state, tabs: newTabs, activeIndex: newActiveIndex};
     }
     default: {
-      console.error(`Invalid action: ${action.type}`);
       console.error(action);
+      throw new Error(`Invalid action: ${action.type}`);
     }
   }
 }
