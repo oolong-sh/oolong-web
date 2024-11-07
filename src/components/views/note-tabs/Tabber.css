@@ -1,6 +1,6 @@
 .tab-bar {
   display: flex;
-  border-bottom: 1px solid gainsboro;
+  background-color: var(--color-neutral);
 }
 
 .tab-contents {

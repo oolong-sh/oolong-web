@@ -1,11 +1,15 @@
 :root {
-  --color-background: white;
-  --color-foreground: black;
-  --color-foreground-muted: gray;
+  /* https://codepen.io/rodriguesmarcos/pen/wvyMoO */
 
-  --color-neutral: gainsboro;
-  --color-primary: green;
-  --color-secondary: cornflowerblue;
+  --color-background: #f5f7fa;
+  --color-background-muted: #e6e9ed;
+  --color-foreground: black;
+  --color-foreground-muted: #656d78;
+
+  --color-neutral: #ccd1d9;
+  --color-neutral-alt: #aab2bd;
+  --color-primary: #8cc152;
+  --color-primary-alt: #a0d468;
 
   --transition-time: 0.3s;
 }
