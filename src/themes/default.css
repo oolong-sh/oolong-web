@@ -1,10 +1,11 @@
 :root {
   --color-background: white;
   --color-foreground: black;
+  --color-foreground-muted: gray;
 
   --color-neutral: gainsboro;
-  --color-primary: blue;
+  --color-primary: green;
   --color-secondary: cornflowerblue;
 
-  ;
+  --transition-time: 0.3s;
 }

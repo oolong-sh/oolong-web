@@ -1,11 +1,4 @@
-* {
-    box-sizing: border-box;
-}
-
-.sidebyside {
-    display: flex;
-}
-
-.sidebyside > .half {
-    width: 50%;
+.app-content {
+    margin-left: 4em;
+    overflow: auto;
 }

@@ -1,15 +1,16 @@
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from 'react-router-dom';
 
 import App from './App';
-import Tabber from './components/tabber/Tabber';
+import NotesView from './components/views/note-tabs/Tabber';
+import GraphView from './components/views/graph/Graph';
 
-function AppRouter() {
+export default function AppRouter() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path='/' element={<App />}>
         <Route path='' element={<Navigate to='/notes' />} />
-        <Route path='notes' element={<Tabber />} />
-        <Route path='graph' element={<></>} />
+        <Route path='notes' element={<NotesView />} />
+        <Route path='graph' element={<GraphView />} />
       </Route>
     )
   );
@@ -18,5 +19,3 @@ function AppRouter() {
     <RouterProvider router={router} />
   );
 }
-
-export default AppRouter;

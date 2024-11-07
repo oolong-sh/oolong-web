@@ -12,9 +12,9 @@ import {
 
 import tabsReducer from './tabsReducer';
 import TabHandle from './TabHandle';
-import Editor from '../editor/ForwardRefEditor';
+import Editor from '../../editor/ForwardRefEditor';
 
-import { useAppContext } from '../../App';
+import { useAppContext } from '../../../App';
 
 const TabberContext = createContext();
 export const useTabberContext = () => useContext(TabberContext);

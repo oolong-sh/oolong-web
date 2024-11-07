@@ -96,9 +96,11 @@ export default function App() {
   return (
     <AppContext.Provider value={appContextValue}>
       <AppSidebar />
-      <main className='main-content'>
-        <Outlet />
-      </main>
+      <div className='app-content'>
+        <main className='main-content'>
+          <Outlet />
+        </main>
+      </div>
     </AppContext.Provider>
   );
 }
