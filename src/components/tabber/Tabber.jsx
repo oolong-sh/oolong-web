@@ -20,7 +20,7 @@ const TabberContext = createContext();
 export const useTabberContext = () => useContext(TabberContext);
 
 export default function Tabber() {
-  const { documents, createDocument } = useAppContext();
+  const { documents, createDocument, loadDocument } = useAppContext();
 
   const [tabsData, tabsDispatch] = useReducer(tabsReducer, {
     tabs: [],
@@ -55,6 +55,13 @@ export default function Tabber() {
     // console.log(ref.current.getMarkdown());
     const newDocument = createDocument({ title: 'New Note', content: '# New Note' });
     openDocumentTab(newDocument);
+  }, []);
+
+  const loadDocumentTab = useCallback((path) => {
+    // TODO load from real path
+    loadDocument(`/loaded_${Date.now()}.md`, (doc) => {
+      openDocumentTab(doc);
+    });
   }, []);
 
   useEffect(() => {

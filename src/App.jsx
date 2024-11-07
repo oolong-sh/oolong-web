@@ -60,16 +60,25 @@ export default function App() {
     return newDocument;
   }, []);
 
-  const loadDocument = useCallback((path) => {
+  const loadDocument = useCallback((path, onLoad) => {
     // TODO: load document from remote server
+    fetch('https://raw.githubusercontent.com/oolong-sh/oolong-web/refs/heads/main/README.md')
+      .then(response => response.text())
+      .then(content => {
+        const newDocument = createDocument({
+          path,
+          title: 'Loaded Document',
+          content: content,
+        });
 
-    const newDocument = createDocument({
-      path,
-      title: 'loaded doc',
-      content: 'loaded content',
-    });
-
-    return newDocument;
+        documentsDispatch({ type: 'add', document: newDocument });
+        return newDocument;
+      })
+      .then(doc => {
+        if (onLoad)
+          onLoad(doc);
+      })
+      .catch(error => console.error(error));
   }, []);
 
   const saveDocument = useCallback(() => {
