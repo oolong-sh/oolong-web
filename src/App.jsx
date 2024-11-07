@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useReducer } from 'react';
+import { Outlet } from 'react-router-dom';
 import './App.css';
-import AppHeader from './components/app-header/AppHeader';
-import Tabber from './components/tabber/Tabber';
+import AppSidebar from './components/app-sidebar/AppSidebar';
 import documentsReducer from './documentReducer';
 
 /*
@@ -85,10 +85,20 @@ export default function App() {
     // TODO: save document to remote sync server
   }, []);
 
+  const appContextValue = {
+    documents,
+    documentsDispatch,
+    createDocument,
+    loadDocument,
+    saveDocument,
+  };
+
   return (
-    <AppContext.Provider value={{ documents, documentsDispatch, createDocument, loadDocument, saveDocument }}>
-      <AppHeader />
-      <Tabber />
+    <AppContext.Provider value={appContextValue}>
+      <AppSidebar />
+      <main className='main-content'>
+        <Outlet />
+      </main>
     </AppContext.Provider>
-  )
+  );
 }
