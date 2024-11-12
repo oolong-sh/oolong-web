@@ -1,11 +1,11 @@
-import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, createHashRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from 'react-router-dom';
 
 import App from './App';
 import NotesView from './components/views/note-tabs/Tabber';
 import GraphView from './components/views/graph/Graph';
 
 export default function AppRouter() {
-  const router = createBrowserRouter(
+  const router = createHashRouter(
     createRoutesFromElements(
       <Route path='/' element={<App />}>
         <Route path='' element={<Navigate to='/notes' />} />
