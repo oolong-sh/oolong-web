@@ -1,11 +1,8 @@
-const { app, BrowserWindow } = require('electron');
+const { app, process, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
 
 let mainWindow;
-
-// TODO check for dev env
-const isDev = false;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -16,14 +13,13 @@ function createWindow() {
     },
   });
 
-  const startUrl = isDev
-    ? 'http://localhost:5173'
+  const startUrl = app.isPackaged
+    ? process.env['ELECTRON_RENDERER_URL']
     : url.format({
         pathname: path.join(__dirname, '../index.html'),
         protocol: 'file:',
         slashes: true,
       });
-
 
   mainWindow.loadURL(startUrl);
   mainWindow.on('closed', () => mainWindow = null);
