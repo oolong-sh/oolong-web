@@ -1,27 +1,20 @@
+import { useEffect, useState } from 'react';
 import { ForceGraph2D } from 'react-force-graph';
 
-const graphData = {
-  "nodes": [
-      {
-        "id": "id1",
-        "name": "name1",
-        "val": 1,
-      },
-      {
-        "id": "id2",
-        "name": "name2",
-        "val": 10,
-      },
-  ],
-  "links": [
-      {
-          "source": "id1",
-          "target": "id2",
-      },
-  ],
-};
-
 export default function Graph() {
+  const [graphData, setGraphData] = useState({});
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/graph`)
+      .then(response => response.json())
+      .then(responseJson => {
+        // TODO process data before usage?
+        console.log(responseJson);
+        setGraphData(responseJson);
+      })
+      .catch(error => console.error(error));
+  }, [setGraphData]);
+
   return (
     <ForceGraph2D graphData={graphData} />
   );
