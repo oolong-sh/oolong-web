@@ -1,11 +1,3 @@
-function findDocument(documents, id) {
-  const document = documents.find(doc => doc.id === id);
-  if (!document) {
-    throw new Error(`Document with id ${id} not found`);
-  }
-  return document;
-}
-
 // TODO check for duplicate ids / paths
 
 export default function documentsReducer(documents, action) {
@@ -18,6 +10,13 @@ export default function documentsReducer(documents, action) {
     }
     case 'rename': {  // TODO rename doc: change id and path
       return documents;
+    }
+    case 'update': {  // update document properties in state array
+      return documents.map(doc => (
+        (doc.id === action.id)
+          ? {...doc, ...action.document}
+          : doc
+      ));
     }
     default: {
       console.error(action);

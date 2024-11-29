@@ -1,22 +1,21 @@
+import { useCallback } from 'react';
 import './TabHandle.css';
-import { useTabberContext } from './Tabber';
+import { useAppContext } from '../../../App';
 
-export default function Tab({ id, title, index }) {
-  const { tabsData, tabsDispatch } = useTabberContext();
+export default function Tab({ id, title, isActive }) {
+  const { setActiveId, closeDocument } = useAppContext();
 
-  function selectTab(event) {
+  const selectTab = useCallback((event) => {
     // Avoids selecting tab when close button clicked
     if (event.target.classList.contains('tab-close'))
       return;
 
-    tabsDispatch({ type: 'select_index', index });
-  }
+    setActiveId(id);
+  }, [setActiveId, id]);
 
-  function closeTab(event) {
-    tabsDispatch({ type: 'close', id });
-  }
-
-  const isActive = (tabsData.activeIndex === index);
+  const closeTab = useCallback((event) => {
+    closeDocument(id);
+  }, [closeDocument, id]);
 
   return (
     <div className={'tab-handle' + (isActive ? ' active' : '')} onClick={selectTab}>

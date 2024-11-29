@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useReducer } from 'react';
+import { createContext, createRef, useCallback, useContext, useReducer, useRef, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import './App.css';
 import AppSidebar from './components/app-sidebar/AppSidebar';
@@ -28,25 +28,35 @@ const defaultDocuments = [
     'path': '/tab1.md',
     'title': 'Tab 1',
     'content': '# Tab 1',
+    editorRef: createRef(),
   },
   {
     'id': '/tab2.md',
     'path': '/tab2.md',
     'title': 'Tab 2',
     'content': '# Tab 2',
+    editorRef: createRef(),
   },
   {
     'id': '/tab3.md',
     'path': '/tab3.md',
     'title': 'Tab 3',
     'content': '# Tab 3',
+    editorRef: createRef(),
   },
 ];
 
 export default function App() {
   const [documents, documentsDispatch] = useReducer(documentsReducer, defaultDocuments);
+  const [activeId, setActiveId] = useState(defaultDocuments[0].id);
 
-  const createDocument = useCallback((document) => {
+  // Get all notes from the note server
+  const fetchDocuments = useCallback(() => {
+    ;
+  }, []);
+
+  // Create a new document locally
+  const openDocument = useCallback((document) => {
     const { path='', title='', content='' } = document;
 
     const newDocument = {
@@ -54,15 +64,23 @@ export default function App() {
       path,
       title,
       content,
+      editorRef: createRef(),
     };
 
     documentsDispatch({ type: 'add', document: newDocument });
     return newDocument;
-  }, []);
+  }, [documentsDispatch]);
 
-  const loadDocument = useCallback((path, onLoad) => {
+  const closeDocument = useCallback((documentId) => {
+    // TODO set new active ID
+
+    documentsDispatch({ type: 'remove', id: documentId });
+  }, [documentsDispatch]);
+
+  // Load a document from the note server
+  const loadDocument = useCallback((path) => {
     // TODO: load document from remote server
-    fetch('https://raw.githubusercontent.com/oolong-sh/oolong-web/refs/heads/main/README.md')
+    const fetchPromise = fetch('https://raw.githubusercontent.com/oolong-sh/oolong-web/refs/heads/main/README.md')
       .then(response => response.text())
       .then(content => {
         const newDocument = createDocument({
@@ -74,21 +92,31 @@ export default function App() {
         documentsDispatch({ type: 'add', document: newDocument });
         return newDocument;
       })
-      .then(doc => {
-        if (onLoad)
-          onLoad(doc);
-      })
       .catch(error => console.error(error));
-  }, []);
 
-  const saveDocument = useCallback(() => {
+    // TODO test (should return newDocument?)
+    return fetchPromise.resolve();
+  }, [documentsDispatch]);
+
+  // Save a document to the note server
+  const saveDocument = useCallback((document) => {
+    // Update content property on document object
+    const content = document.editorRef.current.getMarkdown();
+    documentsDispatch({ type: 'update', id: documentId, document: {content} });
+
     // TODO: save document to remote sync server
-  }, []);
+    // fetch()
+  }, [documentsDispatch]);
 
   const appContextValue = {
     documents,
     documentsDispatch,
-    createDocument,
+
+    activeId,
+    setActiveId,
+
+    openDocument,
+    closeDocument,
     loadDocument,
     saveDocument,
   };
