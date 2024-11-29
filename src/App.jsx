@@ -47,13 +47,32 @@ const defaultDocuments = [
 ];
 
 export default function App() {
+  const [availableDocuments, setAvailableDocuments] = useState([]);
   const [documents, documentsDispatch] = useReducer(documentsReducer, defaultDocuments);
   const [activeId, setActiveId] = useState(defaultDocuments[0].id);
 
   // Get all notes from the note server
   const fetchDocuments = useCallback(() => {
-    ;
-  }, []);
+    fetch(`${API_BASE_URL}/notes`)
+      .then(response => response.json())
+      .then(responseJson => {
+        console.log(responseJson);
+        // TODO check response format
+        // TODO build sidebar file nav from paths
+        setAvailableDocuments(responseJson);
+      })
+      .catch(error => console.error(error));
+  }, [setAvailableDocuments]);
+
+  const findDocument = useCallback((documentId) => {
+    const document = documents.find(doc => documentId === doc.id);
+
+    if (document === null) {
+      throw new Error(`Document with ID ${documentId} not found`);
+    }
+
+    return document;
+  }, [documents]);
 
   // Create a new document locally
   const openDocument = useCallback((document) => {
@@ -79,8 +98,8 @@ export default function App() {
 
   // Load a document from the note server
   const loadDocument = useCallback((path) => {
-    // TODO: load document from remote server
-    const fetchPromise = fetch('https://raw.githubusercontent.com/oolong-sh/oolong-web/refs/heads/main/README.md')
+    // TODO update content if note exists locally
+    const fetchPromise = fetch(`${API_BASE_URL}/note/${documentId}`)
       .then(response => response.text())
       .then(content => {
         const newDocument = createDocument({
@@ -99,22 +118,53 @@ export default function App() {
   }, [documentsDispatch]);
 
   // Save a document to the note server
-  const saveDocument = useCallback((document) => {
+  const saveDocument = useCallback((documentId) => {
+    const document = findDocument(documentId);
+
+    // TODO change request method if creating document
+    const isNew = false;
+
     // Update content property on document object
     const content = document.editorRef.current.getMarkdown();
     documentsDispatch({ type: 'update', id: documentId, document: {content} });
 
-    // TODO: save document to remote sync server
-    // fetch()
-  }, [documentsDispatch]);
+    fetch(`${API_BASE_URL}/note/${documentId}`, {
+      method: isNew ? 'POST' : 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        path: document.path,
+        content: content,
+      }),
+    })
+      .then(response => response.json())
+      .then(responseJson => console.log(responseJson))  // TODO process response?
+      .catch(error => console.error(error));
+  }, [documentsDispatch, findDocument]);
+
+  // Delete a document from the note server
+  const deleteDocument = useCallback((documentId) => {
+    // Remove from local state array
+    documentsDispatch({ type: 'remove', id: documentId, document: {content} });
+
+    fetch(`${API_BASE_URL}/note/${documentId}`, { method: 'DELETE' })
+      .then(response => response.json())
+      .then(responseJson => console.log(responseJson))  // TODO process response?
+      .catch(error => console.error(error));
+  });
 
   const appContextValue = {
+    // Document state
     documents,
     documentsDispatch,
-
+    // Available documents state
+    fetchDocuments,
+    availableDocuments,
+    // Active document ID
     activeId,
     setActiveId,
-
+    // Document manipulation
     openDocument,
     closeDocument,
     loadDocument,
