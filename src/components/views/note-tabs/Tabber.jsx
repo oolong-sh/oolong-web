@@ -11,20 +11,12 @@ export default function Tabber() {
   const {
     documents,
     activeId,
-    loadDocument,
     openDocument,
   } = useAppContext();
 
   const newTab = useCallback(() => {
     openDocument({ title: 'New Note', content: '# New Note' });
   }, [openDocument]);
-
-  const loadDocumentTab = useCallback((path) => {
-    // TODO load from real path
-    loadDocument(`/loaded_${Date.now()}.md`, (doc) => {
-      openDocumentTab(doc);
-    });
-  }, []);
 
   const tabHandles = documents.map((tab) => {
     const isActive = (activeId === tab.id);
