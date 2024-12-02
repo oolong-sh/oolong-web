@@ -35,7 +35,7 @@ export default function Tabber() {
   });
 
   return (
-    <div className="tabber">
+    <div className="tabber fill">
       <div className="tab-bar">
         {tabHandles}
         <button className='tab-new' onClick={newTab}><i className='bi bi-plus'></i></button>
