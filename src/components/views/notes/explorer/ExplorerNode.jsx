@@ -3,15 +3,15 @@ import './ExplorerNode.css';
 import { useAppContext } from '../../../../App';
 
 // TODO key cannot be used as prop (rework treeifier to access path)
-export default function ExplorerNode({ key, name, children }) {
+export default function ExplorerNode({ key, name, level, children }) {
   const isDirectory = Boolean(Object.values(children).length);
 
   return isDirectory
-    ? <ExplorerDirectoryNode key={key} name={name} children={children} />
-    : <ExplorerDocumentNode key={key} name={name} />;
+    ? <ExplorerDirectoryNode key={key} name={name} level={level} children={children} />
+    : <ExplorerDocumentNode key={key} name={name} level={level} />;
 }
 
-function ExplorerDirectoryNode({ key, name, children }) {
+function ExplorerDirectoryNode({ key, name, level, children }) {
   const [isExpanded, setIsExpanded] = useState(true);
 
   const toggleExpanded = useCallback(() => {
@@ -24,11 +24,11 @@ function ExplorerDirectoryNode({ key, name, children }) {
   const nodeIcon = <i className={'bi bi-folder2' + (isExpanded ? '-open': '')} />;
 
   const childNodes = Object.entries(children).map(([name, children]) => {
-    return <ExplorerNode key={`${key}/${name}`} name={name} children={children} />;
+    return <ExplorerNode key={`${key}/${name}`} name={name} level={level+1} children={children} />;
   });
 
   return (
-    <div className={nodeClassName}>
+    <div className={nodeClassName} style={{'--level': level}}>
       <button className='explorer-node-title' onClick={() => toggleExpanded()}>
         {caretIcon} {nodeIcon} {name}
       </button>
@@ -39,7 +39,7 @@ function ExplorerDirectoryNode({ key, name, children }) {
   );
 }
 
-function ExplorerDocumentNode({ name }) {
+function ExplorerDocumentNode({ name, level }) {
   const { loadDocument } = useAppContext();
 
   const openSelf = useCallback(() => {
@@ -48,7 +48,7 @@ function ExplorerDocumentNode({ name }) {
   }, [loadDocument]);
 
   return (
-    <div className='explorer-node document'>
+    <div className='explorer-node document' style={{'--level': level}}>
       <button className='explorer-node-title' onClick={() => openSelf()}>
         <i className='bi bi-file-text' /> {name}
       </button>

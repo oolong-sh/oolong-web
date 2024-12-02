@@ -17,7 +17,9 @@ export default function Explorer() {
 
   return (
     <aside className='explorer'>
-      <ExplorerNode name='root' children={fileTree} />
+      <div className='explorer-content'>
+        <ExplorerNode name='root' level={1} children={fileTree} />
+      </div>
     </aside>
   );
 }

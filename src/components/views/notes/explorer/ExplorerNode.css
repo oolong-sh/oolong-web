@@ -1,5 +1,25 @@
-.explorer-node .document {
-  padding-left: 1.3em;
+.explorer-node {
+  display: contents;
+}
+
+.explorer-node-title {
+  display: block;
+  width: 100%;
+  text-align: start;
+  text-wrap: nowrap;
+}
+
+.explorer-node-title {
+  padding-right: 0.5em;
+  padding-left: calc(var(--level) * 0.5em);
+}
+
+.explorer-node.document .explorer-node-title {
+  padding-left: calc((var(--level) * 0.5em) + 1.3em);
+}
+
+.explorer-node-title:hover {
+  background-color: var(--color-neutral);
 }
 
 .explorer-node-children {
@@ -8,8 +28,4 @@
 
 .explorer-node.expanded > .explorer-node-children {
   display: block;
-}
-
-.explorer-node-children {
-  padding-left: 0.5em;
 }
