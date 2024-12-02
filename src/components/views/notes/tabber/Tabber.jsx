@@ -3,9 +3,9 @@ import  './Tabber.css';
 import { useCallback } from 'react';
 
 import TabHandle from './TabHandle';
-import Editor from '../../editor/ForwardRefEditor';
+import Editor from '../../../editor/ForwardRefEditor';
 
-import { useAppContext } from '../../../App';
+import { useAppContext } from '../../../../App';
 
 export default function Tabber() {
   const {

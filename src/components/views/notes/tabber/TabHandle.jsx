@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import './TabHandle.css';
-import { useAppContext } from '../../../App';
+import { useAppContext } from '../../../../App';
 
 export default function Tab({ id, title, isActive }) {
   const { setActiveId, closeDocument } = useAppContext();

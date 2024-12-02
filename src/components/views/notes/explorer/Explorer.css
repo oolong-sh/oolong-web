@@ -1,0 +1,5 @@
+.explorer {
+  float: left;
+  overflow-y: scroll;
+  max-height: 100vh;
+}

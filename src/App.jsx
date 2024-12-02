@@ -1,8 +1,10 @@
-import { createContext, createRef, useCallback, useContext, useReducer, useRef, useState } from 'react';
+import { createContext, createRef, useCallback, useContext, useEffect, useReducer, useRef, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import './App.css';
 import AppSidebar from './components/app-sidebar/AppSidebar';
 import documentsReducer from './documentReducer';
+import { API_BASE_URL } from './constants';
+import { responseStatusCheck } from './utils';
 
 /*
 https://github.com/vasturiano/react-force-graph
@@ -47,22 +49,18 @@ const defaultDocuments = [
 ];
 
 export default function App() {
-  const [availableDocuments, setAvailableDocuments] = useState([]);
+  const [documentPaths, setDocumentPaths] = useState([]);
   const [documents, documentsDispatch] = useReducer(documentsReducer, defaultDocuments);
   const [activeId, setActiveId] = useState(defaultDocuments[0].id);
 
   // Get all notes from the note server
   const fetchDocuments = useCallback(() => {
     fetch(`${API_BASE_URL}/notes`)
+      .then(responseStatusCheck)
       .then(response => response.json())
-      .then(responseJson => {
-        console.log(responseJson);
-        // TODO check response format
-        // TODO build sidebar file nav from paths
-        setAvailableDocuments(responseJson);
-      })
+      .then(responseJson => setDocumentPaths(responseJson))
       .catch(error => console.error(error));
-  }, [setAvailableDocuments]);
+  }, [setDocumentPaths]);
 
   const findDocument = useCallback((documentId) => {
     const document = documents.find(doc => documentId === doc.id);
@@ -154,13 +152,17 @@ export default function App() {
       .catch(error => console.error(error));
   });
 
+  useEffect(() => {
+    fetchDocuments();
+  }, []);
+
   const appContextValue = {
     // Document state
     documents,
     documentsDispatch,
     // Available documents state
     fetchDocuments,
-    availableDocuments,
+    documentPaths,
     // Active document ID
     activeId,
     setActiveId,

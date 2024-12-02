@@ -2,7 +2,7 @@ import { createBrowserRouter, createHashRouter, createRoutesFromElements, Naviga
 import isElectron from 'is-electron';
 
 import App from './App';
-import NotesView from './components/views/note-tabs/Tabber';
+import NotesView from './components/views/notes/Notes';
 import GraphView from './components/views/graph/Graph';
 
 export default function AppRouter() {
