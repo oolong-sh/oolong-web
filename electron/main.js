@@ -14,12 +14,12 @@ function createWindow() {
   });
 
   const startUrl = app.isPackaged
-    ? process.env['ELECTRON_RENDERER_URL']
-    : url.format({
+    ? url.format({
         pathname: path.join(__dirname, '../index.html'),
         protocol: 'file:',
         slashes: true,
-      });
+      })
+    : process.env['ELECTRON_RENDERER_URL'];
 
   mainWindow.loadURL(startUrl);
   mainWindow.on('closed', () => mainWindow = null);
