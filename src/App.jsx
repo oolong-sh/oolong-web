@@ -97,10 +97,12 @@ export default function App() {
   // Load a document from the note server
   const loadDocument = useCallback((path) => {
     // TODO update content if note exists locally
-    const fetchPromise = fetch(`${API_BASE_URL}/note/${documentId}`)
-      .then(response => response.text())
+    // TODO set title
+    const fetchPromise = fetch(`${API_BASE_URL}/note?path=${encodeURIComponent(path)}`)
+      .then(responseStatusCheck)
+      .then(response => response.json())
       .then(content => {
-        const newDocument = createDocument({
+        const newDocument = openDocument({
           path,
           title: 'Loaded Document',
           content: content,

@@ -1,5 +1,13 @@
-.explorer-node {
+.explorer-node .document {
+  padding-left: 1.3em;
+}
 
+.explorer-node-children {
+  display: none;
+}
+
+.explorer-node.expanded > .explorer-node-children {
+  display: block;
 }
 
 .explorer-node-children {

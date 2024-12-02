@@ -20,5 +20,10 @@ body {
 }
 
 button {
+    background-color: unset;
+    border: none;
+    outline: none;
+    font: inherit;
+    padding: 0;
     cursor: pointer;
 }
