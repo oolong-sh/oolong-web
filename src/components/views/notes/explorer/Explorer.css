@@ -1,7 +1,7 @@
 .explorer {
   width: 16em;
   flex-shrink: 0;
-  overflow: scroll;
+  overflow: auto;
   border-right: 1px solid var(--color-neutral);
 }
 

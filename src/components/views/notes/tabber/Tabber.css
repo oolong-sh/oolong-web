@@ -10,7 +10,7 @@
 
 .tab-contents {
   padding: 0.5em;
-  overflow-y: scroll;
+  overflow-y: auto;
   border-top: 1px solid var(--color-background);
 }
 
