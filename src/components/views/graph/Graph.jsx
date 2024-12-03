@@ -46,6 +46,9 @@ export default function Graph() {
   }, [setGraphData]);
 
   return (
-    <ForceGraph2D graphData={graphData} />
+    <ForceGraph2D
+      nodeAutoColorBy={d => d.group}
+      graphData={graphData}
+    />
   );
 }
