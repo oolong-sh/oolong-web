@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { useAppContext } from '../../../../App';
 import Editor from '../../../editor/ForwardRefEditor';
 
@@ -28,14 +28,22 @@ function tabOnKeyDown(event, appContextValue, tab) {
 
 function TabContents({ tab }) {
   const appContextValue = useAppContext();
-  const isActive = (appContextValue.activeId === tab.id);
+  const { activeId, updateDocument } = appContextValue;
+  const isActive = (activeId === tab.id);
+
+  const onChange = useCallback(value => {
+    if (tab.saved && tab.content !== value) {
+      updateDocument({ id: tab.id, saved: false });
+    }
+  }, [tab, updateDocument]);
+
 
   return (
     <div
       className={'tab-content' + (isActive ? ' active' : '')}
       onKeyDown={(event) => tabOnKeyDown(event, appContextValue, tab)}
     >
-      <Editor ref={tab.editorRef} markdown={tab.content} />
+      <Editor ref={tab.editorRef} markdown={tab.content} onChange={onChange} />
     </div>
   );
 }

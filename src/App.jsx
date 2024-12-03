@@ -97,7 +97,7 @@ export default function App() {
 
   // Create a new document locally
   const openDocument = useCallback((document) => {
-    const { path='', title='', content='' } = document;
+    const { path='', title='', content='', saved=true } = document;
 
     const newDocument = {
       id: (path ? path : `new_doc_${Date.now()}`),
@@ -105,6 +105,7 @@ export default function App() {
       title,
       content,
       editorRef: createRef(),
+      saved,
     };
 
     addDocument(newDocument);
@@ -150,7 +151,7 @@ export default function App() {
 
     // Update content property on document object
     const content = document.editorRef.current.getMarkdown();
-    updateDocument({ id: documentId, content });
+    updateDocument({ id: documentId, content, saved: true });
 
     fetch(`${API_BASE_URL}/note`, {
       method: isNew ? 'POST' : 'PUT',

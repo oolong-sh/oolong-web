@@ -65,6 +65,7 @@ export default function InitializedMDXEditor({
         quotePlugin(),
         thematicBreakPlugin(),
         diffSourcePlugin({
+          diffMarkdown: props.markdown,
           viewMode: 'source',
         }),
 

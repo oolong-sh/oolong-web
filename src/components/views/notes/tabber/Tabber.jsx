@@ -18,11 +18,9 @@ export default function Tabber() {
     openDocument({ title: 'New Note', content: '# New Note' });
   }, [openDocument]);
 
-  const tabHandles = documents.map((tab) => {
-    const isActive = (activeId === tab.id);
-
-    return <TabHandle key={tab.id} {...tab} isActive={isActive} />
-  });
+  const tabHandles = documents.map(tab => (
+    <TabHandle key={tab.id} tab={tab} />
+  ));
 
   const tabContents = documents.map(tab => (
     <TabContents key={tab.id} tab={tab} />
