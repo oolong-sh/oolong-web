@@ -6,8 +6,8 @@ export default function ExplorerNode({ node, level }) {
   const isDirectory = Boolean(Object.values(node.children).length);
 
   return isDirectory
-    ? <ExplorerDirectoryNode key={node.path} node={node} level={level} />
-    : <ExplorerDocumentNode key={node.path} node={node} level={level} />;
+    ? <ExplorerDirectoryNode node={node} level={level} />
+    : <ExplorerDocumentNode node={node} level={level} />;
 }
 
 function ExplorerDirectoryNode({ node, level }) {
@@ -23,7 +23,7 @@ function ExplorerDirectoryNode({ node, level }) {
   const nodeIcon = <i className={'bi bi-folder2' + (isExpanded ? '-open': '')} />;
 
   const childNodes = node.children.map(child => {
-    return <ExplorerNode node={child} level={level+1} />;
+    return <ExplorerNode key={JSON.stringify(child)} node={child} level={level+1} />;
   });
 
   return (
@@ -42,7 +42,7 @@ function ExplorerDocumentNode({ node, level }) {
   const { loadDocument } = useAppContext();
 
   const openSelf = useCallback(() => {
-    loadDocument(node.path);
+    loadDocument(node.path, node.name);
   }, [loadDocument]);
 
   return (
