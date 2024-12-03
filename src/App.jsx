@@ -24,34 +24,10 @@ https://www.svgrepo.com/svg/490398/tea-cup?edit=true
 const AppContext = createContext();
 export const useAppContext = () => useContext(AppContext);
 
-const defaultDocuments = [
-  {
-    'id': '/tab1.md',
-    'path': '/tab1.md',
-    'title': 'Tab 1',
-    'content': '# Tab 1',
-    editorRef: createRef(),
-  },
-  {
-    'id': '/tab2.md',
-    'path': '/tab2.md',
-    'title': 'Tab 2',
-    'content': '# Tab 2',
-    editorRef: createRef(),
-  },
-  {
-    'id': '/tab3.md',
-    'path': '/tab3.md',
-    'title': 'Tab 3',
-    'content': '# Tab 3',
-    editorRef: createRef(),
-  },
-];
-
 export default function App() {
   const [documentPaths, setDocumentPaths] = useState([]);
-  const [documents, documentsDispatch] = useReducer(documentsReducer, defaultDocuments);
-  const [activeId, setActiveId] = useState(defaultDocuments[0].id);
+  const [documents, documentsDispatch] = useReducer(documentsReducer, []);
+  const [activeId, setActiveId] = useState('');
 
   // Get all notes from the note server
   const fetchDocuments = useCallback(() => {
@@ -85,6 +61,7 @@ export default function App() {
     };
 
     documentsDispatch({ type: 'add', document: newDocument });
+    setActiveId(newDocument.id);
     return newDocument;
   }, [documentsDispatch]);
 
@@ -96,20 +73,27 @@ export default function App() {
 
   // Load a document from the note server
   const loadDocument = useCallback((path, title) => {
-    // TODO update content if note exists locally
-    // TODO set title
     fetch(`${API_BASE_URL}/note?path=${encodeURIComponent(path)}`)
       .then(responseStatusCheck)
       .then(response => response.json())
       .then(content => {
-        const newDocument = openDocument({
-          path,
-          title,
-          content,
-        });
+        const existingDocument = documents.find(doc => doc.path === path);
+
+        if (existingDocument === undefined) {
+          openDocument({ path, title, content });
+        } else {
+          const newDocument = {
+            ...existingDocument,
+            path,
+            title,
+            content,
+          };
+
+          documentsDispatch({ type: 'update', document: newDocument });
+        }
       })
       .catch(error => console.error(error));
-  }, [documentsDispatch]);
+  }, [documents, documentsDispatch]);
 
   // Save a document to the note server
   const saveDocument = useCallback((documentId) => {
