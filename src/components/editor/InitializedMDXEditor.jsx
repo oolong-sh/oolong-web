@@ -70,7 +70,18 @@ export default function InitializedMDXEditor({
         sandpackPlugin({ sandpackConfig: simpleSandpackConfig }),
         codeMirrorPlugin({ codeBlockLanguages: {
           js: 'JavaScript',
+          jsx: 'JavaScript (React)',
+          ts: 'TypeScript',
+          tsx: 'TypeScript (React)',
           css: 'CSS',
+          html: 'HTML',
+          json: 'JSON',
+          java: 'Java',
+          python: 'Python',
+          xml: 'XML',
+          groovy: "groovy",
+          sh: 'sh',
+          bash: 'sh',
         } }),
 
         toolbarPlugin({
