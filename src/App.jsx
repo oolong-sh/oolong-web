@@ -35,8 +35,35 @@ export default function App() {
 
   // Remove a document from the local state array
   const removeDocument = useCallback(documentId => {
-    setDocuments(docs => docs.filter(doc => doc.id !== documentId));
-  }, [setDocuments]);
+    setDocuments(docs => {
+      let newIndex = docs.findIndex(doc => doc.id === documentId);
+      const newDocs = docs.filter(doc => doc.id !== documentId);
+
+      if (newIndex < 0)
+        throw new Error(`Document with ID ${documentId} not found`);
+
+      // Decrement if new index overflows document array
+      if (newIndex >= newDocs.length) {
+        newIndex = newDocs.length - 1;
+      }
+
+      // Deselect if last tab was closed
+      const newId = (newIndex >= 0)
+        ? newDocs[newIndex].id
+        : '';
+
+      setActiveId(activeId => {
+        if (activeId !== documentId) {
+          // Keep current tab selected if it is not being closed
+          return activeId;
+        } else {
+          return newId;
+        }
+      });
+
+      return newDocs;
+    });
+  }, [setDocuments, setActiveId]);
 
   // Update a document in the local state array
   const updateDocument = useCallback(newDocument => {
@@ -86,8 +113,6 @@ export default function App() {
   }, [addDocument]);
 
   const closeDocument = useCallback((documentId) => {
-    // TODO set new active ID
-
     removeDocument(documentId);
   }, [removeDocument]);
 
