@@ -72,18 +72,11 @@ export default function Graph() {
     loadDocument(node.id, node.name);
   }, []);
 
-  const [mode, setMode] = useState('2d');
+  const [use3D, setUse3D] = useState(false);
 
-  const ForceGraph = ((mode) => {
-    switch (mode) {
-      case '2d':
-        return ForceGraph2D;
-      case '3d':
-        return ForceGraph3D;
-      default:
-        throw new Error(`Unrecognized graph mode ${mode}`);
-    }
-  })(mode);
+  const ForceGraph = use3D
+    ? ForceGraph3D
+    : ForceGraph2D;
 
   return (
     <div className='graph-wrapper'>
@@ -93,12 +86,12 @@ export default function Graph() {
         onNodeClick={onNodeClick} />
       <div className='graph-mode-selector'>
         <button
-          className={('2d' === mode) ? 'active': ''}
-          onClick={() => setMode('2d')}
+          className={use3D ? '': 'active'}
+          onClick={() => setUse3D(false)}
         >2D</button>
         <button
-          className={('3d' === mode) ? 'active': ''}
-          onClick={() => setMode('3d')}
+          className={use3D ? 'active': ''}
+          onClick={() => setUse3D(true)}
         >3D</button>
       </div>
     </div>
