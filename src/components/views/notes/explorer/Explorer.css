@@ -1,4 +1,6 @@
 .explorer {
+  width: 16em;
+  flex-shrink: 0;
   overflow: scroll;
   border-right: 1px solid var(--color-neutral);
 }
@@ -6,6 +8,5 @@
 .explorer-content {
   display: grid;
   align-items: start;
-  width: 16em;
   margin-bottom: auto;
 }
