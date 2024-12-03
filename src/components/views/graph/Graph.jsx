@@ -12,24 +12,22 @@ function defaultGraphData() {
   }
 }
 
-// Dark range and green from darkearth theme
-const noteNodeColor = '#B36B42';
-const keywordNodeColor = '#77824A';
+function getNodeColor(node) {
+  switch (node.group) {
+    case 'note':
+      return '#B36B42'; // dark orange
+    case 'keyword':
+      return '#77824A'; // green
+    default:
+      return '#ffffff';
+  }
+}
 
 const loColor = [61, 52, 44];
 const hiColor = [215, 196, 132];
 
 function styleGraphData(graphData) {
   const { nodes, links } = graphData;
-
-  // Color nodes by group
-  const newNodes = nodes.map(node => {
-    const color = ('note' === node.group)
-      ? noteNodeColor
-      : keywordNodeColor;
-
-    return {...node, color};
-  });
 
   const newLinks = links.map(link => {
     // TODO magic number, normalize strength in Go code
@@ -44,7 +42,7 @@ function styleGraphData(graphData) {
     return {...link, color: colorRGB};
   });
 
-  return {nodes: newNodes, links: newLinks};
+  return {nodes, links: newLinks};
 }
 
 export default function Graph() {
@@ -83,6 +81,7 @@ export default function Graph() {
       <ForceGraph
         graphData={graphData}
         backgroundColor='#24211e'
+        nodeColor={getNodeColor}
         onNodeClick={onNodeClick} />
       <div className='graph-mode-selector'>
         <button
