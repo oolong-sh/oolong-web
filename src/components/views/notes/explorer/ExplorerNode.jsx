@@ -47,7 +47,7 @@ function ExplorerDocumentNode({ node, level }) {
 
   return (
     <div className='explorer-node document' style={{'--level': level}}>
-      <button className='explorer-node-title' title={node.path} onClick={() => openSelf()}>
+      <button className='explorer-node-title' title={node.path} onDoubleClick={() => openSelf()}>
         <i className='bi bi-file-text' /> {node.name}
       </button>
     </div>
