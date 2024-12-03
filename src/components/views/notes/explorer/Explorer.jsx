@@ -7,18 +7,23 @@ import './Explorer.css';
 export default function Explorer() {
   const { documentPaths } = useAppContext();
 
-  const [fileTree, setFileTree] = useState({});
+  const [fileTree, setFileTree] = useState([]);
 
   useEffect(() => {
     if (!documentPaths)
       return;
     setFileTree(toTree(documentPaths));
-  }, [documentPaths, setFileTree])
+  }, [documentPaths, setFileTree]);
+
+  const rootNode = {
+    name: 'root',
+    children: fileTree,
+  };
 
   return (
     <aside className='explorer'>
       <div className='explorer-content'>
-        <ExplorerNode name='root' level={1} children={fileTree} />
+        <ExplorerNode node={rootNode} level={1} />
       </div>
     </aside>
   );

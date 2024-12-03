@@ -2,16 +2,15 @@ import { useCallback, useState } from 'react';
 import './ExplorerNode.css';
 import { useAppContext } from '../../../../App';
 
-// TODO key cannot be used as prop (rework treeifier to access path)
-export default function ExplorerNode({ key, name, level, children }) {
-  const isDirectory = Boolean(Object.values(children).length);
+export default function ExplorerNode({ node, level }) {
+  const isDirectory = Boolean(Object.values(node.children).length);
 
   return isDirectory
-    ? <ExplorerDirectoryNode key={key} name={name} level={level} children={children} />
-    : <ExplorerDocumentNode key={key} name={name} level={level} />;
+    ? <ExplorerDirectoryNode key={node.path} node={node} level={level} />
+    : <ExplorerDocumentNode key={node.path} node={node} level={level} />;
 }
 
-function ExplorerDirectoryNode({ key, name, level, children }) {
+function ExplorerDirectoryNode({ node, level }) {
   const [isExpanded, setIsExpanded] = useState(true);
 
   const toggleExpanded = useCallback(() => {
@@ -23,14 +22,14 @@ function ExplorerDirectoryNode({ key, name, level, children }) {
   const caretIcon = <i className={'bi bi-caret' + (isExpanded ? '-down': '-right')} />;
   const nodeIcon = <i className={'bi bi-folder2' + (isExpanded ? '-open': '')} />;
 
-  const childNodes = Object.entries(children).map(([name, children]) => {
-    return <ExplorerNode key={`${key}/${name}`} name={name} level={level+1} children={children} />;
+  const childNodes = node.children.map(child => {
+    return <ExplorerNode node={child} level={level+1} />;
   });
 
   return (
     <div className={nodeClassName} style={{'--level': level}}>
       <button className='explorer-node-title' onClick={() => toggleExpanded()}>
-        {caretIcon} {nodeIcon} {name}
+        {caretIcon} {nodeIcon} {node.name}
       </button>
       <div className='explorer-node-children'>
         {childNodes}
@@ -39,18 +38,17 @@ function ExplorerDirectoryNode({ key, name, level, children }) {
   );
 }
 
-function ExplorerDocumentNode({ name, level }) {
+function ExplorerDocumentNode({ node, level }) {
   const { loadDocument } = useAppContext();
 
   const openSelf = useCallback(() => {
-    // TODO get path from node (rework treeifier)
-    loadDocument('');
+    loadDocument(node.path);
   }, [loadDocument]);
 
   return (
     <div className='explorer-node document' style={{'--level': level}}>
-      <button className='explorer-node-title' onClick={() => openSelf()}>
-        <i className='bi bi-file-text' /> {name}
+      <button className='explorer-node-title' title={node.path} onClick={() => openSelf()}>
+        <i className='bi bi-file-text' /> {node.name}
       </button>
     </div>
   );
