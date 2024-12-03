@@ -14,9 +14,7 @@
 }
 
 .tab-close {
-  border: none;
-  background-color: unset;
-  font-size: 1em;
+  padding: 0 0.2em;
   border-radius: 0.5em;
 }
 
