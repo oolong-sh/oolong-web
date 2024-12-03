@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAppContext } from '../../../../App';
-import { toTree } from '../../../../utils';
+import { collapseChildren, toTree } from '../../../../utils';
 import ExplorerNode from './ExplorerNode';
 import './Explorer.css';
 
@@ -16,9 +16,10 @@ export default function Explorer() {
   }, [documentPaths, setFileTree]);
 
   const rootNode = {
-    name: 'root',
+    name: '',
     children: fileTree,
   };
+  collapseChildren(rootNode);
 
   return (
     <aside className='explorer'>

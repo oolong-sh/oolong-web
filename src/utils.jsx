@@ -1,6 +1,3 @@
-import path from 'path';
-
-
 export async function responseStatusCheck(response) {
   if (!response.ok) {
     // TODO better error message
@@ -26,3 +23,14 @@ export function toTree(paths) {
     return r;
   }, []);
 };
+
+export function collapseChildren(node) {
+  node.children.forEach(child => {
+    collapseChildren(child);
+  });
+
+  if (node.children.length === 1 && node.children[0].children.length > 0) {
+    node.name = `${node.name}/${node.children[0].name}`.replace('//', '/');
+    node.children = node.children[0].children;
+  }
+}
