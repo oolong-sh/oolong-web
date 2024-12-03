@@ -72,7 +72,7 @@ export default function App() {
         if (doc.id !== newDocument.id) {
           return doc;
         } else {
-          if (doc.path !== newDocument.path) {
+          if (newDocument.path !== undefined && doc.path !== newDocument.path) {
             // Update active ID if current document was renamed
             setActiveId(activeId => {
               return (activeId === doc.id)
