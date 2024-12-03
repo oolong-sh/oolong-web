@@ -4,6 +4,7 @@ import {
   linkPlugin,
   listsPlugin,
   quotePlugin,
+  tablePlugin,
   thematicBreakPlugin,
   // Toolbar
   toolbarPlugin,
@@ -20,6 +21,7 @@ import {
   ChangeCodeMirrorLanguage,
   ShowSandpackInfo,
   InsertSandpack,
+  InsertTable,
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
 
@@ -63,6 +65,7 @@ export default function InitializedMDXEditor({
         linkPlugin(),
         listsPlugin(),
         quotePlugin(),
+        tablePlugin(),
         thematicBreakPlugin(),
         diffSourcePlugin({
           diffMarkdown: props.markdown,
@@ -72,6 +75,7 @@ export default function InitializedMDXEditor({
         codeBlockPlugin({defaultCodeBlockLanguage: 'js'}),
         sandpackPlugin({ sandpackConfig: simpleSandpackConfig }),
         codeMirrorPlugin({ codeBlockLanguages: {
+          // https://stackoverflow.com/a/27070872
           js: 'JavaScript',
           jsx: 'JavaScript (React)',
           ts: 'TypeScript',
@@ -93,6 +97,7 @@ export default function InitializedMDXEditor({
             {' '}
             <UndoRedo />
             <BoldItalicUnderlineToggles />
+            <InsertTable />
             <ConditionalContents
               options={[
                 { when: (editor) => editor?.editorType === 'codeblock', contents: () => <ChangeCodeMirrorLanguage /> },
