@@ -1,4 +1,29 @@
+.mdxeditor {
+    --baseBgActive: var(--dark-orange);
+}
+
 .mdxeditor-toolbar {
     background-color: var(--color-background-muted);
     color: var(--color-foreground);
+}
+
+.cm-editor {
+    background-color: transparent !important;
+}
+
+.cm-activeLineGutter {
+    background-color: var(--color-background-muted) !important;
+}
+
+.cm-selectionBackground,
+.cm-content ::selection {
+    background-color: var(--color-background-muted) !important;
+}
+
+.cm-selectionMatch {
+    background-color: var(--dark-orange) !important;
+}
+
+.cm-matchingBracket {
+    background-color: var(--dark-orange) !important;
 }
