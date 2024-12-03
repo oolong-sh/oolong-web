@@ -26,23 +26,17 @@ function getNodeColor(node) {
 const loColor = [61, 52, 44];
 const hiColor = [215, 196, 132];
 
-function styleGraphData(graphData) {
-  const { nodes, links } = graphData;
+function getLinkColor(link) {
+  // TODO magic number, normalize strength in Go code
+  const strength = link.strength / 0.4;
+  
+  const color = [
+    Math.round(loColor[0] * (1 - strength)) + (hiColor[0] * strength),
+    Math.round(loColor[1] * (1 - strength)) + (hiColor[1] * strength),
+    Math.round(loColor[2] * (1 - strength)) + (hiColor[2] * strength),
+  ];
 
-  const newLinks = links.map(link => {
-    // TODO magic number, normalize strength in Go code
-    const strength = link.strength / 0.4;
-    const color = [
-      Math.round(loColor[0] * (1 - strength)) + (hiColor[0] * strength),
-      Math.round(loColor[1] * (1 - strength)) + (hiColor[1] * strength),
-      Math.round(loColor[2] * (1 - strength)) + (hiColor[2] * strength),
-    ];
-    const colorRGB = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
-
-    return {...link, color: colorRGB};
-  });
-
-  return {nodes, links: newLinks};
+  return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
 }
 
 export default function Graph() {
@@ -55,7 +49,7 @@ export default function Graph() {
       .then(response => response.json())
       .then(responseJson => {
         console.log(responseJson);
-        setGraphData(styleGraphData(responseJson));
+        setGraphData(responseJson);
       })
       .catch(error => console.error(error));
   }, [setGraphData]);
@@ -81,6 +75,7 @@ export default function Graph() {
       <ForceGraph
         graphData={graphData}
         backgroundColor='#24211e'
+        linkColor={getLinkColor}
         nodeColor={getNodeColor}
         onNodeClick={onNodeClick} />
       <div className='graph-mode-selector'>
