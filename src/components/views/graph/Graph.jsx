@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ForceGraph2D } from 'react-force-graph';
+import { ForceGraph2D, ForceGraph3D } from 'react-force-graph';
 import { API_BASE_URL } from '../../../constants';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../../App';
+import './Graph.css';
 
 function defaultGraphData() {
   return {
@@ -71,9 +72,34 @@ export default function Graph() {
     loadDocument(node.id, node.name);
   }, []);
 
+  const [mode, setMode] = useState('2d');
+
+  const ForceGraph = ((mode) => {
+    switch (mode) {
+      case '2d':
+        return ForceGraph2D;
+      case '3d':
+        return ForceGraph3D;
+      default:
+        throw new Error(`Unrecognized graph mode ${mode}`);
+    }
+  })(mode);
+
   return (
-    <ForceGraph2D
-      graphData={graphData}
-      onNodeClick={onNodeClick} />
+    <div className='graph-wrapper'>
+      <ForceGraph
+        graphData={graphData}
+        onNodeClick={onNodeClick} />
+      <div className='graph-mode-selector'>
+        <button
+          className={('2d' === mode) ? 'active': ''}
+          onClick={() => setMode('2d')}
+        >2D</button>
+        <button
+          className={('3d' === mode) ? 'active': ''}
+          onClick={() => setMode('3d')}
+        >3D</button>
+      </div>
+    </div>
   );
 }

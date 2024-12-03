@@ -1,0 +1,27 @@
+.graph-wrapper {
+  position: relative;
+}
+
+.graph-mode-selector {
+  position: absolute;
+  bottom: 1em;
+  left: 1em;
+  border: 1px solid var(--color-neutral);
+  border-radius: 0.5em;
+  overflow: hidden;
+}
+
+.graph-mode-selector button {
+  padding: 0.5em 1em;
+  background-color: var(--color-background);
+  transition: background-color var(--transition-time);
+}
+
+.graph-mode-selector button:hover,
+.graph-mode-selector button.active {
+  background-color: var(--color-neutral);
+}
+
+.graph-mode-selector button:not(:last-child) {
+  border-right: 1px solid var(--color-neutral);
+}
