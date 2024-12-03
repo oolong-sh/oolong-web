@@ -1,5 +1,6 @@
 .tabber {
-  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .tab-bar {
@@ -9,7 +10,6 @@
 
 .tab-contents {
   padding: 0.5em;
-  height: 100%;
   overflow-y: scroll;
 }
 
