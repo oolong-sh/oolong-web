@@ -79,9 +79,10 @@ export default function InitializedMDXEditor({
           java: 'Java',
           python: 'Python',
           xml: 'XML',
-          groovy: "groovy",
-          sh: 'sh',
-          bash: 'sh',
+          groovy: "Groovy",
+          sh: 'Shell',
+          bash: 'Bash',
+          '': 'Text',
         } }),
 
         toolbarPlugin({
