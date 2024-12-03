@@ -7,7 +7,7 @@ export default function Tab({ id, title, isActive }) {
 
   const selectTab = useCallback((event) => {
     // Avoids selecting tab when close button clicked
-    if (event.target.classList.contains('tab-close'))
+    if (!event.target.classList.contains('tab-title'))
       return;
 
     setActiveId(id);
