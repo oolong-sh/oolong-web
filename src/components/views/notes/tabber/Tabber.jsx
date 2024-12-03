@@ -12,11 +12,35 @@ export default function Tabber() {
     documents,
     activeId,
     openDocument,
+    closeDocument,
+    saveDocument,
   } = useAppContext();
 
   const newTab = useCallback(() => {
     openDocument({ title: 'New Note', content: '# New Note' });
   }, [openDocument]);
+
+  const tabOnKeyDown = useCallback((event, tab) => {
+    switch (event.key) {
+      case 's': {
+        if (event.ctrlKey) {
+          event.preventDefault();
+          saveDocument(tab.id);
+        }
+        break;
+      }
+      case 'w': {
+        // TODO this does not catch CTRL+W
+        if (event.ctrlKey) {
+          event.preventDefault();
+          closeDocument(tab.id);
+        }
+        break;
+      }
+      default:
+        break;
+    }
+  }, [closeDocument, saveDocument]);
 
   const tabHandles = documents.map((tab) => {
     const isActive = (activeId === tab.id);
@@ -28,7 +52,11 @@ export default function Tabber() {
     const isActive = (activeId === tab.id);
 
     return (
-      <div key={tab.id} className={'tab-content' + (isActive ? ' active' : '')}>
+      <div
+        key={tab.id}
+        className={'tab-content' + (isActive ? ' active' : '')}
+        onKeyDown={(event) => tabOnKeyDown(event, tab)}
+      >
         <Editor ref={tab.editorRef} markdown={tab.content} />
       </div>
     );

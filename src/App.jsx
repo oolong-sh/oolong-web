@@ -106,7 +106,7 @@ export default function App() {
     const content = document.editorRef.current.getMarkdown();
     documentsDispatch({ type: 'update', id: documentId, document: {content} });
 
-    fetch(`${API_BASE_URL}/note/${documentId}`, {
+    fetch(`${API_BASE_URL}/note`, {
       method: isNew ? 'POST' : 'PUT',
       headers: {
         'Content-Type': 'application/json'
