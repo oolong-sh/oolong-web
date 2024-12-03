@@ -10,12 +10,11 @@ import TabContents from './TabContents';
 export default function Tabber() {
   const {
     documents,
-    activeId,
     openDocument,
   } = useAppContext();
 
   const newTab = useCallback(() => {
-    openDocument({ title: 'New Note', content: '# New Note' });
+    openDocument({ title: 'New Note', content: '# New Note', saved: false });
   }, [openDocument]);
 
   const tabHandles = documents.map(tab => (

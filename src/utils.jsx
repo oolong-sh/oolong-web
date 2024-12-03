@@ -8,7 +8,7 @@ export async function responseStatusCheck(response) {
   return response;
 }
 
-const SEPARATOR_EXPRESSION = /[\\\/]+/i;
+export const SEPARATOR_EXPRESSION = /[\\\/]+/i;
 
 // https://stackoverflow.com/a/57344759
 export function toTree(paths) {

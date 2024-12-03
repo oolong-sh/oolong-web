@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import './App.css';
 import AppSidebar from './components/app-sidebar/AppSidebar';
 import { API_BASE_URL } from './constants';
-import { responseStatusCheck } from './utils';
+import { collapseChildren, responseStatusCheck, SEPARATOR_EXPRESSION, toTree } from './utils';
 
 /*
 https://github.com/vasturiano/react-force-graph
@@ -68,11 +68,24 @@ export default function App() {
   // Update a document in the local state array
   const updateDocument = useCallback(newDocument => {
     setDocuments(docs => {
-      return docs.map(doc => (
-        (doc.id === newDocument.id)
-          ? {...doc, ...newDocument}
-          : doc
-      ));
+      return docs.map(doc => {
+        if (doc.id !== newDocument.id) {
+          return doc;
+        } else {
+          if (doc.path !== newDocument.path) {
+            // Update active ID if current document was renamed
+            setActiveId(activeId => {
+              return (activeId === doc.id)
+                ? newDocument.path
+                : activeId;
+            });
+            // Update document properties
+            newDocument.id = newDocument.path;
+            newDocument.title = newDocument.path.split(SEPARATOR_EXPRESSION).pop();
+          }
+          return {...doc, ...newDocument};
+        }
+      });
     });
   }, [setDocuments]);
 
@@ -147,11 +160,26 @@ export default function App() {
     const document = findDocument(documentId);
 
     // TODO change request method if creating document
-    const isNew = false;
+    const isNew = document.path.length === 0;
+    let newPath;
+    if (isNew) {
+      // TODO guess root path
+      const rootNode = { name: '', children: toTree(documentPaths) };
+      collapseChildren(rootNode);
+
+      newPath = window.prompt('Enter a path for the new note:', `${rootNode.name}/${document.title}.md` );
+      if (null === newPath)
+        return;
+    };
 
     // Update content property on document object
     const content = document.editorRef.current.getMarkdown();
-    updateDocument({ id: documentId, content, saved: true });
+    updateDocument({
+      id: documentId,
+      path: newPath ?? document.path,
+      content,
+      saved: true
+    });
 
     fetch(`${API_BASE_URL}/note`, {
       method: isNew ? 'POST' : 'PUT',
@@ -159,14 +187,17 @@ export default function App() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        path: document.path,
+        path: newPath ?? document.path,
         content,
       }),
     })
-      .then(response => response.json())
-      .then(responseJson => console.log(responseJson))  // TODO process response?
+      .then(responseStatusCheck)
+      .then(() => {
+        if (isNew)
+          fetchDocuments();
+      })
       .catch(error => console.error(error));
-  }, [findDocument, updateDocument]);
+  }, [documentPaths, findDocument, updateDocument]);
 
   // Delete a document from the note server
   const deleteDocument = useCallback((documentId) => {
