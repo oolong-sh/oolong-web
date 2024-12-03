@@ -89,6 +89,7 @@ export default function Graph() {
     <div className='graph-wrapper'>
       <ForceGraph
         graphData={graphData}
+        backgroundColor='#24211e'
         onNodeClick={onNodeClick} />
       <div className='graph-mode-selector'>
         <button
