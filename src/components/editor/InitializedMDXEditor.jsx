@@ -1,6 +1,7 @@
 import {
   MDXEditor,
   headingsPlugin,
+  linkPlugin,
   listsPlugin,
   quotePlugin,
   thematicBreakPlugin,
@@ -59,6 +60,7 @@ export default function InitializedMDXEditor({
     <MDXEditor
       plugins={[
         headingsPlugin(),
+        linkPlugin(),
         listsPlugin(),
         quotePlugin(),
         thematicBreakPlugin(),
@@ -66,7 +68,10 @@ export default function InitializedMDXEditor({
 
         codeBlockPlugin({defaultCodeBlockLanguage: 'js'}),
         sandpackPlugin({ sandpackConfig: simpleSandpackConfig }),
-        codeMirrorPlugin({ codeBlockLanguages: { js: 'JavaScript', css: 'CSS' } }),
+        codeMirrorPlugin({ codeBlockLanguages: {
+          js: 'JavaScript',
+          css: 'CSS',
+        } }),
 
         toolbarPlugin({
           toolbarContents: () => (<>
