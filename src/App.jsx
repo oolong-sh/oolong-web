@@ -90,6 +90,7 @@ export default function App() {
           };
 
           documentsDispatch({ type: 'update', document: newDocument });
+          setActiveId(newDocument.id);
         }
       })
       .catch(error => console.error(error));
