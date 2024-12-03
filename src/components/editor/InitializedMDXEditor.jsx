@@ -64,7 +64,9 @@ export default function InitializedMDXEditor({
         listsPlugin(),
         quotePlugin(),
         thematicBreakPlugin(),
-        diffSourcePlugin(),
+        diffSourcePlugin({
+          viewMode: 'source',
+        }),
 
         codeBlockPlugin({defaultCodeBlockLanguage: 'js'}),
         sandpackPlugin({ sandpackConfig: simpleSandpackConfig }),
