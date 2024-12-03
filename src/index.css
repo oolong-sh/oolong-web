@@ -12,6 +12,7 @@
 * {
     box-sizing: border-box;
     color: var(--color-foreground);
+    scrollbar-color: var(--color-neutral) transparent;
 }
 
 body {
