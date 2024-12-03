@@ -2,7 +2,6 @@ import { createContext, createRef, useCallback, useContext, useEffect, useReduce
 import { Outlet } from 'react-router-dom';
 import './App.css';
 import AppSidebar from './components/app-sidebar/AppSidebar';
-import documentsReducer from './documentReducer';
 import { API_BASE_URL } from './constants';
 import { responseStatusCheck } from './utils';
 
@@ -26,8 +25,29 @@ export const useAppContext = () => useContext(AppContext);
 
 export default function App() {
   const [documentPaths, setDocumentPaths] = useState([]);
-  const [documents, documentsDispatch] = useReducer(documentsReducer, []);
+  const [documents, setDocuments] = useState([]);
   const [activeId, setActiveId] = useState('');
+
+  // Add a document to the local state array
+  const addDocument = useCallback(newDocument => {
+    setDocuments(docs => [...docs, newDocument]);
+  }, [setDocuments]);
+
+  // Remove a document from the local state array
+  const removeDocument = useCallback(documentId => {
+    setDocuments(docs => docs.filter(doc => doc.id !== documentId));
+  }, [setDocuments]);
+
+  // Update a document in the local state array
+  const updateDocument = useCallback(newDocument => {
+    setDocuments(docs => {
+      return docs.map(doc => (
+        (doc.id === newDocument.id)
+          ? {...doc, ...newDocument}
+          : doc
+      ));
+    });
+  }, [setDocuments]);
 
   // Get all notes from the note server
   const fetchDocuments = useCallback(() => {
@@ -60,16 +80,16 @@ export default function App() {
       editorRef: createRef(),
     };
 
-    documentsDispatch({ type: 'add', document: newDocument });
+    addDocument(newDocument);
     setActiveId(newDocument.id);
     return newDocument;
-  }, [documentsDispatch]);
+  }, [addDocument]);
 
   const closeDocument = useCallback((documentId) => {
     // TODO set new active ID
 
-    documentsDispatch({ type: 'remove', id: documentId });
-  }, [documentsDispatch]);
+    removeDocument(documentId);
+  }, [removeDocument]);
 
   // Load a document from the note server
   const loadDocument = useCallback((path, title) => {
@@ -89,12 +109,12 @@ export default function App() {
             content,
           };
 
-          documentsDispatch({ type: 'update', document: newDocument });
+          updateDocument(newDocument);
           setActiveId(newDocument.id);
         }
       })
       .catch(error => console.error(error));
-  }, [documents, documentsDispatch]);
+  }, [documents, updateDocument, openDocument]);
 
   // Save a document to the note server
   const saveDocument = useCallback((documentId) => {
@@ -105,29 +125,37 @@ export default function App() {
 
     // Update content property on document object
     const content = document.editorRef.current.getMarkdown();
-    documentsDispatch({ type: 'update', id: documentId, document: {content} });
+    updateDocument({ id: documentId, content });
 
     fetch(`${API_BASE_URL}/note`, {
       method: isNew ? 'POST' : 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         path: document.path,
-        content: content,
+        content,
       }),
     })
       .then(response => response.json())
       .then(responseJson => console.log(responseJson))  // TODO process response?
       .catch(error => console.error(error));
-  }, [documentsDispatch, findDocument]);
+  }, [findDocument, updateDocument]);
 
   // Delete a document from the note server
   const deleteDocument = useCallback((documentId) => {
     // Remove from local state array
-    documentsDispatch({ type: 'remove', id: documentId, document: {content} });
+    removeDocument(documentId);
 
-    fetch(`${API_BASE_URL}/note/${documentId}`, { method: 'DELETE' })
+    fetch(`${API_BASE_URL}/note`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        path: document.path,
+      }),
+    })
       .then(response => response.json())
       .then(responseJson => console.log(responseJson))  // TODO process response?
       .catch(error => console.error(error));
@@ -140,7 +168,10 @@ export default function App() {
   const appContextValue = {
     // Document state
     documents,
-    documentsDispatch,
+    // Document state modification
+    addDocument,
+    removeDocument,
+    updateDocument,
     // Available documents state
     fetchDocuments,
     documentPaths,
