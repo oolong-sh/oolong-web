@@ -39,14 +39,18 @@ function ExplorerDirectoryNode({ node, level }) {
 }
 
 function ExplorerDocumentNode({ node, level }) {
-  const { loadDocument } = useAppContext();
+  const { activeId, loadDocument } = useAppContext();
+
+  const isActive = (activeId === node.path);
 
   const openSelf = useCallback(() => {
     loadDocument(node.path, node.name);
   }, [loadDocument]);
 
+  const nodeClassName = 'explorer-node document' + (isActive ? ' active' : '');
+
   return (
-    <div className='explorer-node document' style={{'--level': level}}>
+    <div className={nodeClassName} style={{'--level': level}}>
       <button className='explorer-node-title' title={node.path} onDoubleClick={() => openSelf()}>
         <i className='bi bi-file-text' /> {node.name}
       </button>

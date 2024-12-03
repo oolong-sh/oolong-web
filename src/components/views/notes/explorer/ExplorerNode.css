@@ -18,6 +18,7 @@
   padding-left: calc((var(--level) * 0.5em) + 1.3em);
 }
 
+.explorer-node.active .explorer-node-title,
 .explorer-node-title:hover {
   background-color: var(--color-neutral);
 }
