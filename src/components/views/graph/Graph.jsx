@@ -9,11 +9,24 @@ function defaultGraphData() {
   }
 }
 
+// Dark range and green from darkearth theme
+const noteNodeColor = '#B36B42';
+const keywordNodeColor = '#77824A';
+
 const loColor = [61, 52, 44];
 const hiColor = [215, 196, 132];
 
 function styleGraphData(graphData) {
   const { nodes, links } = graphData;
+
+  // Color nodes by group
+  const newNodes = nodes.map(node => {
+    const color = ('note' === node.group)
+      ? noteNodeColor
+      : keywordNodeColor;
+
+    return {...node, color};
+  });
 
   const newLinks = links.map(link => {
     // TODO magic number, normalize strength in Go code
@@ -28,7 +41,7 @@ function styleGraphData(graphData) {
     return {...link, color: colorRGB};
   });
 
-  return {nodes, links: newLinks};
+  return {nodes: newNodes, links: newLinks};
 }
 
 export default function Graph() {
@@ -38,7 +51,6 @@ export default function Graph() {
     fetch(`${API_BASE_URL}/graph`)
       .then(response => response.json())
       .then(responseJson => {
-        // TODO process data before usage?
         console.log(responseJson);
         setGraphData(styleGraphData(responseJson));
       })
@@ -46,9 +58,6 @@ export default function Graph() {
   }, [setGraphData]);
 
   return (
-    <ForceGraph2D
-      nodeAutoColorBy={d => d.group}
-      graphData={graphData}
-    />
+    <ForceGraph2D graphData={graphData} />
   );
 }
