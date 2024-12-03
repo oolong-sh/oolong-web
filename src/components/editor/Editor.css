@@ -1,5 +1,11 @@
-.mdxeditor {
+.mdxeditor,
+.mdxeditor-select-content {
+    --baseBorder: var(--color-foreground);
+    --baseLine: var(--color-foreground);
+    --baseBase: var(--color-background-muted);
+    --baseBg: var(--color-background-muted);
     --baseBgActive: var(--dark-orange);
+    --basePageBg: var(--color-background-muted);
 }
 
 .mdxeditor-toolbar {
