@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ForceGraph2D } from 'react-force-graph';
 import { API_BASE_URL } from '../../../constants';
+import { useNavigate } from 'react-router-dom';
+import { useAppContext } from '../../../App';
 
 function defaultGraphData() {
   return {
@@ -45,6 +47,8 @@ function styleGraphData(graphData) {
 }
 
 export default function Graph() {
+  const { loadDocument } = useAppContext();
+
   const [graphData, setGraphData] = useState(defaultGraphData);
 
   useEffect(() => {
@@ -57,7 +61,19 @@ export default function Graph() {
       .catch(error => console.error(error));
   }, [setGraphData]);
 
+  const navigate = useNavigate();
+
+  const onNodeClick = useCallback(node => {
+    if ('note' !== node.group)
+      return;
+
+    navigate('/notes');
+    loadDocument(node.id, node.name);
+  }, []);
+
   return (
-    <ForceGraph2D graphData={graphData} />
+    <ForceGraph2D
+      graphData={graphData}
+      onNodeClick={onNodeClick} />
   );
 }
