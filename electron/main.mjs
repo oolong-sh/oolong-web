@@ -1,8 +1,14 @@
 import { app, BrowserWindow } from "electron";
 import path from "path";
-import url from "url";
+import url, { fileURLToPath } from "url";
+import process from "process";
 
-let mainWindow: BrowserWindow;
+// Fix __dirname not defined issue in mjs
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+/** @type {BrowserWindow?} */
+let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
