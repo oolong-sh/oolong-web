@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ForceGraph2D, ForceGraph3D } from 'react-force-graph';
 import { API_BASE_URL } from '../../../constants';
 import { useNavigate } from 'react-router-dom';
@@ -54,6 +54,24 @@ export default function Graph() {
       .catch(error => console.error(error));
   }, [setGraphData]);
 
+  // Graph size must be specified to auto-resize
+
+  const wrapperRef = useRef(null);
+  const [graphWidth, setGraphWidth] = useState(0);
+  const [graphHeight, setGraphHeight] = useState(0);
+
+  const onWindowResize = useCallback(() => {
+    const bounds = wrapperRef.current.getBoundingClientRect();
+    setGraphWidth(bounds.width);
+    setGraphHeight(bounds.height);
+  }, [wrapperRef]);
+
+  useEffect(() => {
+    onWindowResize();
+    window.addEventListener('resize', onWindowResize);
+    return () => window.removeEventListener('resize', onWindowResize);
+  }, [onWindowResize]);
+
   const navigate = useNavigate();
 
   const onNodeClick = useCallback(node => {
@@ -71,9 +89,11 @@ export default function Graph() {
     : ForceGraph2D;
 
   return (
-    <div className='graph-wrapper'>
+    <div ref={wrapperRef} className='graph-wrapper'>
       <ForceGraph
         graphData={graphData}
+        width={graphWidth}
+        height={graphHeight}
         backgroundColor='#24211e'
         linkColor={getLinkColor}
         nodeColor={getNodeColor}
