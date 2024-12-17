@@ -1,3 +1,4 @@
+import React from "react";
 import Explorer from "./explorer/Explorer";
 import Tabber from "./tabber/Tabber";
 
