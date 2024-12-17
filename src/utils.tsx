@@ -1,3 +1,5 @@
+import type { Node } from "./types";
+
 export async function responseStatusCheck(response: Response) {
   if (!response.ok) {
     // TODO better error message
@@ -8,14 +10,14 @@ export async function responseStatusCheck(response: Response) {
   return response;
 }
 
-export const SEPARATOR_EXPRESSION = /[\\\/]+/i;
+export const SEPARATOR_EXPRESSION = /[\\/]+/i;
 
 // https://stackoverflow.com/a/57344759
-export function toTree(paths: String[]) {
+export function toTree(paths: string[]) {
   return paths.reduce((r, path) => {
-    var names = path.split(SEPARATOR_EXPRESSION);
+    const names = path.split(SEPARATOR_EXPRESSION);
     names.reduce((q, name) => {
-      var temp = q.find((node) => node.name === name);
+      let temp = q.find((node) => node.name === name);
       if (!temp) q.push((temp = { name, path, children: [] }));
       return temp.children;
     }, r);
@@ -23,8 +25,8 @@ export function toTree(paths: String[]) {
   }, []);
 }
 
-export function collapseChildren(node) {
-  node.children.forEach((child) => {
+export function collapseChildren(node: Node) {
+  node.children.forEach((child: Node) => {
     collapseChildren(child);
   });
 

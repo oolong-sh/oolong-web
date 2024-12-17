@@ -16,6 +16,7 @@ import {
   SEPARATOR_EXPRESSION,
   toTree,
 } from "./utils";
+import { Node } from "./types";
 
 type AppDocument = {
   id?: string;
@@ -208,7 +209,7 @@ export default function App() {
       let newPath: string;
       if (isNew) {
         // TODO guess root path
-        const rootNode = { name: "", children: toTree(documentPaths) };
+        const rootNode: Node = { name: "", children: toTree(documentPaths) };
         collapseChildren(rootNode);
 
         newPath = window.prompt(
