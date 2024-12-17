@@ -3,6 +3,7 @@ import { useAppContext } from "../../../../App";
 import { collapseChildren, toTree } from "../../../../utils";
 import ExplorerNode from "./ExplorerNode";
 import "./Explorer.css";
+import { Node } from "../../../../types";
 
 export default function Explorer() {
   const { documentPaths }: any = useAppContext();
@@ -14,7 +15,7 @@ export default function Explorer() {
     setFileTree(toTree(documentPaths));
   }, [documentPaths, setFileTree]);
 
-  const rootNode = {
+  const rootNode: Node = {
     name: "",
     children: fileTree,
   };
