@@ -1,8 +1,14 @@
 import React, { useCallback, useState } from "react";
 import "./ExplorerNode.css";
 import { useAppContext } from "../../../../App";
+import { AppCtx, Node } from "../../../../types";
 
-export default function ExplorerNode({ node, level }) {
+type ExplorerNodeProps = {
+  node: Node;
+  level: number;
+};
+
+export default function ExplorerNode({ node, level }: ExplorerNodeProps) {
   const isDirectory = Boolean(Object.values(node.children).length);
 
   return isDirectory ? (
@@ -29,7 +35,7 @@ function ExplorerDirectoryNode({ node, level }) {
     <i className={"bi bi-folder2" + (isExpanded ? "-open" : "")} />
   );
 
-  const childNodes = node.children.map((child) => {
+  const childNodes = node.children.map((child: Node) => {
     return (
       <ExplorerNode
         key={JSON.stringify(child)}
@@ -40,9 +46,10 @@ function ExplorerDirectoryNode({ node, level }) {
   });
 
   return (
-    // FIX: --level style not allowed by typescript in div
-    // <div className={nodeClassName} style={{ "--level": level }}>
-    <div className={nodeClassName}>
+    <div
+      className={nodeClassName}
+      style={{ ["--level" as string]: level } as React.CSSProperties}
+    >
       <button className="explorer-node-title" onClick={() => toggleExpanded()}>
         {caretIcon} {nodeIcon} {node.name}
       </button>
@@ -51,8 +58,8 @@ function ExplorerDirectoryNode({ node, level }) {
   );
 }
 
-function ExplorerDocumentNode({ node, level }) {
-  const { activeId, loadDocument }: any = useAppContext(); // FIX: types
+function ExplorerDocumentNode({ node, level }: ExplorerNodeProps) {
+  const { activeId, loadDocument }: AppCtx = useAppContext();
 
   const isActive = activeId === node.path;
 
@@ -63,9 +70,10 @@ function ExplorerDocumentNode({ node, level }) {
   const nodeClassName = "explorer-node document" + (isActive ? " active" : "");
 
   return (
-    // FIX: --level style not allowed by typescript in div
-    // <div className={nodeClassName} style={{ "--level": level }}>
-    <div className={nodeClassName}>
+    <div
+      className={nodeClassName}
+      style={{ ["--level" as string]: level } as React.CSSProperties}
+    >
       <button
         className="explorer-node-title"
         title={node.path}

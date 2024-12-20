@@ -89,6 +89,7 @@ export default function InitializedMDXEditor({ editorRef, ...props }) {
             groovy: "Groovy",
             sh: "Shell",
             bash: "Bash",
+            c: "C",
             "": "Text",
           },
         }),

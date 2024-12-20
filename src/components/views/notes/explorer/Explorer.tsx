@@ -3,10 +3,10 @@ import { useAppContext } from "../../../../App";
 import { collapseChildren, toTree } from "../../../../utils";
 import ExplorerNode from "./ExplorerNode";
 import "./Explorer.css";
-import { Node } from "../../../../types";
+import { AppCtx, Node } from "../../../../types";
 
 export default function Explorer() {
-  const { documentPaths }: any = useAppContext();
+  const { documentPaths }: AppCtx = useAppContext();
 
   const [fileTree, setFileTree] = useState([]);
 

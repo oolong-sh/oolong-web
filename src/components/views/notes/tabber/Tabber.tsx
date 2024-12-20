@@ -1,14 +1,12 @@
+import React, { useCallback } from "react";
+import { useAppContext } from "../../../../App";
+import { AppCtx } from "../../../../types";
+import TabHandle from "./TabHandle";
+import TabContents from "./TabContents";
 import "./Tabber.css";
 
-import React, { useCallback } from "react";
-
-import TabHandle from "./TabHandle";
-
-import { useAppContext } from "../../../../App";
-import TabContents from "./TabContents";
-
 export default function Tabber() {
-  const { documents, openDocument }: any = useAppContext(); // FIX: correct typing
+  const { documents, openDocument }: AppCtx = useAppContext();
 
   const newTab = useCallback(() => {
     openDocument({ title: "New Note", content: "# New Note", saved: false });

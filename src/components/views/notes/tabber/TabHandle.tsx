@@ -1,9 +1,10 @@
 import React, { useCallback } from "react";
 import "./TabHandle.css";
 import { useAppContext } from "../../../../App";
+import { AppCtx } from "../../../../types";
 
 export default function Tab({ tab }) {
-  const { activeId, setActiveId, closeDocument }: any = useAppContext(); // FIX: correct typing
+  const { activeId, setActiveId, closeDocument }: AppCtx = useAppContext();
   const isActive = activeId === tab.id;
 
   const selectTab = useCallback(
@@ -16,12 +17,9 @@ export default function Tab({ tab }) {
     [tab, setActiveId],
   );
 
-  const closeTab = useCallback(
-    (event) => {
-      closeDocument(tab.id);
-    },
-    [tab, closeDocument],
-  );
+  const closeTab = useCallback(() => {
+    closeDocument(tab.id);
+  }, [tab, closeDocument]);
 
   return (
     <div
