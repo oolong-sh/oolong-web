@@ -16,16 +16,8 @@ import {
   SEPARATOR_EXPRESSION,
   toTree,
 } from "./utils";
-import { Node } from "./types";
-
-type AppDocument = {
-  id?: string;
-  path?: string;
-  title?: string;
-  content?: string;
-  editorRef?: React.RefObject<any>;
-  saved?: boolean;
-};
+import { AppCtx, AppDocument, Node } from "./types";
+import { MDXEditorMethods } from "@mdxeditor/editor";
 
 /*
 https://github.com/vasturiano/react-force-graph
@@ -42,8 +34,10 @@ https://www.npmjs.com/package/node-pandoc
 https://www.svgrepo.com/svg/490398/tea-cup?edit=true
 */
 
-const AppContext = createContext({});
-export const useAppContext = () => useContext(AppContext);
+const AppContext = createContext<AppCtx>({});
+export const useAppContext = function (): AppCtx {
+  return useContext(AppContext);
+};
 
 export default function App() {
   const [documentPaths, setDocumentPaths] = useState<string[]>([]);
@@ -153,7 +147,7 @@ export default function App() {
         path,
         title,
         content,
-        editorRef: createRef(),
+        editorRef: createRef<MDXEditorMethods>(),
         saved,
       };
 
@@ -270,7 +264,7 @@ export default function App() {
     fetchDocuments();
   }, []);
 
-  const appContextValue = {
+  const appContextValue: AppCtx = {
     // Document state
     documents,
     // Document state modification

@@ -1,6 +1,7 @@
 import React, { memo, useCallback } from "react";
 import { useAppContext } from "../../../../App";
 import Editor from "../../../editor/ForwardRefEditor";
+import { AppCtx } from "../../../../types";
 
 function tabOnKeyDown(event, appContextValue, tab) {
   const { closeDocument, saveDocument } = appContextValue;
@@ -28,7 +29,7 @@ function tabOnKeyDown(event, appContextValue, tab) {
 
 function TabContents({ tab }) {
   const appContextValue = useAppContext();
-  const { activeId, updateDocument }: any = appContextValue;
+  const { activeId, updateDocument }: AppCtx = appContextValue;
   const isActive = activeId === tab.id;
 
   const onChange = useCallback(

@@ -4,6 +4,7 @@ import { API_BASE_URL } from "../../../constants";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../../App";
 import "./Graph.css";
+import { AppCtx } from "../../../types";
 
 type GraphNode = {
   id: string;
@@ -54,7 +55,7 @@ function getLinkColor(link: GraphLink) {
 }
 
 export default function Graph() {
-  const { loadDocument }: any = useAppContext(); // FIX: correct type instead of 'any'
+  const { loadDocument }: AppCtx = useAppContext();
 
   const [graphData, setGraphData] = useState(defaultGraphData);
 
