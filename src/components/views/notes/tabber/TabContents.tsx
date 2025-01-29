@@ -1,19 +1,20 @@
-import { memo, useCallback } from 'react';
-import { useAppContext } from '../../../../App';
-import Editor from '../../../editor/ForwardRefEditor';
+import React, { memo, useCallback } from "react";
+import { useAppContext } from "../../../../App";
+import Editor from "../../../editor/ForwardRefEditor";
+import { AppCtx } from "../../../../types";
 
 function tabOnKeyDown(event, appContextValue, tab) {
   const { closeDocument, saveDocument } = appContextValue;
 
   switch (event.key) {
-    case 's': {
+    case "s": {
       if (event.ctrlKey) {
         event.preventDefault();
         saveDocument(tab.id);
       }
       break;
     }
-    case 'w': {
+    case "w": {
       // TODO this does not catch CTRL+W
       if (event.ctrlKey) {
         event.preventDefault();
@@ -28,21 +29,24 @@ function tabOnKeyDown(event, appContextValue, tab) {
 
 function TabContents({ tab }) {
   const appContextValue = useAppContext();
-  const { activeId, updateDocument } = appContextValue;
-  const isActive = (activeId === tab.id);
+  const { activeId, updateDocument }: AppCtx = appContextValue;
+  const isActive = activeId === tab.id;
 
-  const onChange = useCallback(value => {
-    if (tab.saved && tab.content !== value) {
-      updateDocument({ id: tab.id, saved: false });
-    }
-  }, [tab, updateDocument]);
-
+  const onChange = useCallback(
+    (value) => {
+      if (tab.saved && tab.content !== value) {
+        updateDocument({ id: tab.id, saved: false });
+      }
+    },
+    [tab, updateDocument],
+  );
 
   return (
     <div
-      className={'tab-content' + (isActive ? ' active' : '')}
+      className={"tab-content" + (isActive ? " active" : "")}
       onKeyDown={(event) => tabOnKeyDown(event, appContextValue, tab)}
     >
+      {/* FIX: markdown prop */}
       <Editor ref={tab.editorRef} markdown={tab.content} onChange={onChange} />
     </div>
   );

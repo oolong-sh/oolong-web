@@ -1,6 +1,6 @@
-import { StrictMode } from "react";
+import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import AppRouter from "./AppRouter.jsx";
+import AppRouter from "./AppRouter";
 import "./index.css";
 // import './themes/default.css'
 import "./themes/darkearth.css";
